@@ -1,0 +1,65 @@
+# Requested ignores
+data/
+results/
+data/
+.claude/
+*.egg-info/
+
+# OS
+.DS_Store
+
+# Python bytecode and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dylib
+
+# Python packaging
+*.egg
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# Caches and tooling
+.cache/
+.pytest_cache/
+.mypy_cache/
+.pytype/
+.ruff_cache/
+.hypothesis/
+
+# Coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Large installers
+Miniconda3-latest-MacOSX-arm64.sh
