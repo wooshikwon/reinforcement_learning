@@ -607,6 +607,7 @@ $$Q(s_t, a_t) = \mathbb{E}[r_t + \max_{a_{t+1}} Q(s_{t+1}, a_{t+1})]$$
 
 #### 3. 중요 포인트
 
+
 **정책 경사 vs Q-Learning 비교:**
 
 | 항목 | 정책 경사 (PG) | Q-Learning |
