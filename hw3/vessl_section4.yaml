@@ -1,0 +1,15 @@
+name: united-senior-run
+description: "Homework 3 Section 4 - DQN CartPole Experiments"
+
+resources:
+  cluster: vessl-kr-a100-80g-sxm
+  preset: gpu-a100-80g-small
+
+image: quay.io/vessl-ai/torch:2.3.1-cuda12.1-r5
+
+run:
+  - pip install gymnasium[classic-control] tensorboard opencv-python pyyaml tqdm ale-py gymnasium[atari,accept-rom-license]
+  - python gcb6206/scripts/run_hw3.py -cfg experiments/dqn/cartpole.yaml --seed 1
+  - python gcb6206/scripts/run_hw3.py -cfg experiments/dqn/cartpole_lr_5e-2.yaml --seed 1
+  - mkdir -p /output/section4
+  - cp -r data/ /output/section4/

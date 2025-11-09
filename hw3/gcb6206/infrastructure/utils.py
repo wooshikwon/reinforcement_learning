@@ -36,14 +36,18 @@ def sample_trajectory(
 
         # TODO(student): use the most recent ob to decide what to do
         # HINT: agent.get_action()
-        ac = ...
+        # Agent의 정책으로 Action 선택
+        ac = agent.get_action(ob)
 
         # TODO(student): take that action and get reward and next obs from the environment
         # HINT: use env.step()
-        next_ob, rew, terminated, truncated, info = ...
+        # 환경에서 Action 수행
+        next_ob, rew, terminated, truncated, info = env.step(ac)
 
         # TODO(student): rollout can end due to termination, or truncation because it reached the maximum number of steps.
-        rollout_done = ... # HINT: this is either 0 or 1
+        # HINT: this is either 0 or 1
+        # Termination 또는 truncation 시 episode 종료
+        rollout_done = terminated or truncated
 
         steps += 1
 
@@ -89,7 +93,7 @@ def sample_trajectories(
     trajs = []
     while timesteps_this_batch < min_timesteps_per_batch:
         # collect rollout
-        traj = sample_trajectory(env, policy, max_length, render)
+        traj = sample_trajectory(env, agent, max_length, render)
         trajs.append(traj)
 
         # count steps

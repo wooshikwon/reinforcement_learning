@@ -87,28 +87,38 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
 
     for step in tqdm.trange(config["total_steps"], dynamic_ncols=True):
         epsilon = exploration_schedule.value(step)
-        
+
         # TODO(student): Compute action
         # HINT: use agent.get_action() with epsilon
-        action = ...
+        # Epsilon-greedy 정책으로 행동 선택
+        action = agent.get_action(observation, epsilon=epsilon)
 
         # TODO(student): Step the environment
         # HINT: use env.step()
-        next_observation, reward, terminated, truncated, info = ...
+        # 환경에서 한 스텝 진행
+        next_observation, reward, terminated, truncated, info = env.step(action)
 
         next_observation = np.asarray(next_observation)
 
-        # Add the data to the replay buffer if not truncated 
-        if not truncated: 
+        # Add the data to the replay buffer if not truncated
+        if not truncated:
             if isinstance(replay_buffer, MemoryEfficientReplayBuffer):
                 # We're using the memory-efficient replay buffer,
                 # So we do not insert observation, but only the last frame of the next_observation (as other frames are already stored)
                 replay_buffer.insert(action, reward, next_observation[-1], terminated)
             else:
-                # TODO(student): 
-                # We're using the regular replay buffer 
-                # Simply insert all obs (not observation[-1]) 
+                # TODO(student):
+                # We're using the regular replay buffer
+                # Simply insert all obs (not observation[-1])
                 # replay_buffer.insert(...)
+                # Regular buffer는 전체 observation 저장
+                replay_buffer.insert(
+                    observation=observation,
+                    action=action,
+                    reward=reward,
+                    next_observation=next_observation,
+                    done=terminated,
+                )
 
         # Handle episode termination
         if terminated or truncated:
@@ -123,14 +133,23 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
         if step >= config["learning_starts"]:
             # TODO(student): Sample config["batch_size"] samples from the replay buffer
             # HINT: Use replay_buffer.sample()
-            batch = ... 
+            # Replay buffer에서 배치 샘플링
+            batch = replay_buffer.sample(config["batch_size"])
 
             # Convert to PyTorch tensors
             batch = ptu.from_numpy(batch)
 
             # TODO(student): Train the agent. `batch` is a dictionary of numpy arrays.
             # HINT: agent.update
-            update_info = ...
+            # Agent 업데이트
+            update_info = agent.update(
+                obs=batch["observations"],
+                action=batch["actions"],
+                reward=batch["rewards"],
+                next_obs=batch["next_observations"],
+                done=batch["dones"],
+                step=step,
+            )
 
             # Logging code
             update_info["epsilon"] = epsilon
