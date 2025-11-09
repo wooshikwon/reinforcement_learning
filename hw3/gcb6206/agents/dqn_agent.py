@@ -49,13 +49,14 @@ class DQNAgent(nn.Module):
         # TODO(student): get the action from the critic using an epsilon-greedy strategy
         # Epsilon-greedy로 Action 선택
         if np.random.random() < epsilon:
-            action = np.random.randint(self.num_actions)
+            # Random exploration - int 직접 반환
+            return np.random.randint(self.num_actions)
         else:
+            # Greedy exploitation - tensor를 int로 변환하여 반환
             with torch.no_grad():
                 q_values = self.critic(observation)
                 action = torch.argmax(q_values, dim=1)
-
-        return ptu.to_numpy(action).squeeze(0).item()
+            return ptu.to_numpy(action).squeeze(0).item()
 
     def update_critic(
         self,
