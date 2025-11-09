@@ -89,7 +89,8 @@ class DQNAgent(nn.Module):
             next_q_values = torch.gather(next_qa_values, 1, next_action.unsqueeze(1)).squeeze(1)
 
             # TD target 계산: r + 할인율*(1-d)*Q(s',a')
-            target_values = reward + self.discount * (1 - done) * next_q_values
+            # done은 bool tensor이므로 float로 변환 필요
+            target_values = reward + self.discount * (1.0 - done.float()) * next_q_values
 
         # TODO(student): train the critic with the target values
         # Use self.critic_loss for calculating the loss
